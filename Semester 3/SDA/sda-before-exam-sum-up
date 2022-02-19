@@ -1,0 +1,201 @@
+1. dfs
+2. bfs
+
+    void bfs(int source, std::unordered_set<int> visited) {
+        if (visited.find(source) != visited.end()) {
+            return;
+        }
+        visited.emplace(source);
+        std::queue<int> queue;
+        queue.push(source);
+        while (!queue.empty()) {
+            int vertex = queue.front();
+            queue.pop();
+            for (int i: this->adjacencyList[vertex]) {
+                if (visited.find(i) == visited.end()) {
+                    visited.emplace(i);
+                    queue.push(i);
+                }
+            }
+        }
+    }
+
+3. намиране на най-кратък път в непретеглен граф - bfs*
+
+    int bfs(int source, int end) {
+        std::unordered_set<int> visited;
+        std::queue<int> queue;
+        int level = -1;
+        queue.emplace(source);
+        queue.emplace(level);
+        visited.emplace(source);
+        while (!queue.empty()) {
+            int vertex = queue.front();
+            queue.pop();
+            if (vertex == -1) {
+                level++;
+                queue.emplace(-1);
+                continue;
+            }
+            if (vertex == end) {
+                return level;
+            }
+            for (int i: this->adjacencyList[vertex]) {
+                if (visited.find(i) == visited.end()) {
+                    visited.emplace(i);
+                    queue.push(i);
+                }
+            }
+        }
+        return -1;
+    }
+
+4. намиране на най-кратък път в претеглен граф с неотрицателни тегла - Дийкстра
+
+    std::vector<int> inline dijkstra(int source) {
+        std::priority_queue<Node> heap;
+        std::vector<int> distances(this->numberOfVertices, M);
+        std::vector<int> visited(this->numberOfVertices, 0);
+        // distance source->source is 0
+        distances[source] = 0;
+        heap.emplace(source, 0);
+        while (!heap.empty()) {
+            int vertex = heap.top().end;
+            heap.pop();
+            // to avoid repetition
+            if (visited[vertex]) {
+                continue;
+            }
+            for (Node node: adjacencyList[vertex]) {
+                // relaxation
+                if (distances[node.end] > distances[vertex] + node.weight) {
+                    distances[node.end] = distances[vertex] + node.weight;
+                    heap.emplace(node.end, distances[node.end]);
+                }
+            }
+            // mark as visited to avoid going through the same vertex again
+            visited[vertex] = 1;
+        }
+        return distances;
+    }
+
+5. намиране на най-кратък път в претеглен граф с всякакви тегла - Прим
+6. намиране на МПД - Крускал
+
+    class UndirectedGraph {
+        struct Edge {
+        public:
+            int start;
+            int end;
+            int weight;
+
+            bool operator<(const Edge &other) const {
+                return this->weight < other.weight;
+            }
+        };
+
+        int numberOfVertices = 5;
+        std::vector<Edge> adjacencyList;
+
+        std::vector<int> parentVector;//[numberOfVertices] big and [i]=i
+
+        int findSet(int vertex) {
+            if (this->parentVector[vertex] == vertex) {
+                return vertex;
+            }
+            parentVector[vertex] = findSet(parentVector[vertex]);
+            return parentVector[vertex];
+        }
+
+        void unify(int a, int b) {
+            int set1 = findSet(a);
+            int set2 = findSet(b);
+            if (set1 == set2) {
+                return;
+            }
+            this->parentVector[set2] = set1;
+        }
+
+        // call this for Chazelle algo after all edges have been inserted
+        // aka before pathExists()
+        void update() {
+            for (Edge edge: this->adjacencyList) {
+                unify(edge.start, edge.end);
+            }
+        }
+
+        // use this to check if path exists
+        bool pathExists(int start, int end) {
+            return findSet(start) == findSet(end);
+        }
+
+        // use this to get MST
+        std::vector<Edge> Kruskal() {
+            std::vector<Edge> result;
+            std::sort(this->adjacencyList.begin(), this->adjacencyList.end());
+
+            for (Edge edge: this->adjacencyList) {
+                if (findSet(edge.start) != findSet(edge.end)) {
+                    unify(edge.start, edge.end);
+                    result.push_back(edge);
+                }
+            }
+            return result;
+        }
+    };
+
+7. намиране на цикъл в насочен граф
+
+    bool dfs(int source, std::unordered_set<int> &visited) {
+        // if cycle exists
+        if (visited.find(source) != visited.end()) {
+            return true;
+        }
+        visited.emplace(source);
+        for (Node i: this->adjacencyList[source]) {
+            if (dfs(i.data, visited)) {
+                return true;
+            }
+        }
+        // recursively remove when withdrawing
+        visited.erase(source);
+        return false;
+    }
+
+    bool isCyclic() {
+        std::unordered_set<int> visited;
+        // in case it fails somewhere, it will fail as a whole
+        for (int i: this->vertices) {
+            visited.clear();
+            if (dfs(i, visited)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+8. намиране на цикъл в ненасочен граф + отстраняванеto му - МПД на Крускал
+9. броене на компоненти на свързаност в насочен граф
+
+    inline void dfs(int source, std::unordered_set<int> &visited) {
+        visited.insert(source);
+        for (int i: this->adjacencyList[source]) {
+            if (visited.find(i) == visited.end()) {
+                dfs(i, visited);
+            }
+        }
+        // тук няма махане на посетеното
+    }
+
+    inline int countComponents() {
+        int count = 0;
+        std::unordered_set<int> visited;
+        for (int i = 0; i < this->numberOfVertices; i++) {
+            if (visited.find(i) == visited.end()) {
+                dfs(i, visited);
+                count++;
+            }
+
+        }
+        return count;
+    }
