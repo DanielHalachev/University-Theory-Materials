@@ -1,0 +1,41 @@
+@startuml
+class DriverManager {
+  +getConnection(String url, String user, String password): Connection
+}
+
+interface Connection {
+  +createStatement(): Statement
+  +prepareStatement(String sql): PreparedStatement
+  +close()
+}
+
+interface Statement {
+  +executeQuery(String sql): ResultSet
+  +executeUpdate(String sql): int
+  +close()
+}
+
+interface ResultSet {
+  +next(): boolean
+  +getInt(String columnLabel): int
+  +getString(String columnLabel): String
+  +getDouble(String columnLabel): double
+  +close()
+}
+
+DriverManager --> Connection: getConnection(url, user, password)
+Connection --> Statement: createStatement()
+Connection --> PreparedStatement: prepareStatement(sql)
+Statement --> ResultSet: executeQuery(sql)
+Statement --> int: executeUpdate(sql)
+ResultSet --> boolean: next()
+ResultSet --> int: getInt(columnLabel)
+ResultSet --> String: getString(columnLabel)
+ResultSet --> double: getDouble(columnLabel)
+
+note "Statement is used for general-purpose SQL queries.\nRisk of SQL injection exists when constructing queries." as NoteStatement
+note "PreparedStatement is precompiled and optimized.\nUseful for repeated queries and helps prevent SQL injection." as NotePreparedStatement
+
+NoteStatement .. Statement
+NotePreparedStatement .. PreparedStatement
+@enduml

@@ -1,0 +1,84 @@
+@startuml
+package javax.ejb {
+  interface MessageDrivenBean
+  interface EnterpriseBean
+  interface EntityBean
+  interface SessionBean {
+    +ejbActivate()
+    +ejbPassivate()
+    +ejbRemove()
+    +setSessionContext(SessionContext ctx)
+  }
+
+  interface MySessionBeanInterface
+  annotation Remote
+  annotation Local
+  Local --MySessionBeanInterface
+  Remote --MySessionBeanInterface
+
+  class MySessionBeanClass
+
+  annotation Stateful
+  annotation Stateless
+  annotation Singleton
+
+  Stateful --MySessionBeanClass
+  Stateless --MySessionBeanClass
+  Singleton --MySessionBeanClass
+}
+
+package javax.naming {
+  interface Context {
+    +lookup(String name)
+    +bind(String name, Object obj)
+    +unbind(String name)
+    +rename(String oldName, String newName)
+    +list(String name)
+    +listBindings(String name)
+
+    constant String PROVIDER_URL
+  }
+
+  class Properties {
+    +Properties()
+    +Properties(Properties defaults)
+    +put(String key, String value)
+  }
+
+  class InitialContext <<InitialContext>> {
+    +lookup(String name)
+    +bind(String name, Object obj)
+    +unbind(String name)
+    +rename(String oldName, String newName)
+    +list(String name)
+    +listBindings(String name)
+    +InitialContext(Properties environment)
+  }
+}
+
+class MyServer {
+  -@EJB(mappedName="ejb/MySessionBeanClass") \nprivate MySessionBeanInterface mySessionBeanInstance
+}
+
+class MyClient1 {
+  -@EJB(lookup="java:global/MyApp/ejb/MySessionBeanClass") \nMySessionBeanInterface myRemoteSessionBeanInstance;
+}
+
+class MyClient2 {
+  -Properties properties
+  -Context context = InitialContext(properties)
+  -Object proxy = context.lookup("ejb/MySessionBeanInterface")
+  -MySessionBeanInterface myBean = PortableRemoteObject.narrow(proxy, MySessionBeanInterface.class)
+}
+
+MySessionBeanInterface --|> SessionBean
+MySessionBeanClass --|> MySessionBeanInterface
+
+MessageDrivenBean --|> EnterpriseBean
+
+EnterpriseBean <|.. SessionBean
+EnterpriseBean <|.. EntityBean
+
+InitialContext --|> Context
+
+@enduml

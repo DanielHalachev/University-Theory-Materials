@@ -1,0 +1,79 @@
+@startuml
+interface javax.jms.Message {
+  +BytesMessage : BytesMessage
+  +TextMessage : TextMessage
+  +StreamMessage : StreamMessage
+  +MapMessage : MapMessage
+  +ObjectMessage : ObjectMessage
+}
+
+interface javax.jms.Destination
+
+interface javax.jms.MessageProducer {
+  +send(Destination destination, Message message) : void
+  +getDeliveryMode() : int
+  +getDestination() : Destination
+}
+
+interface javax.jms.MessageConsumer {
+  +receive() : Message
+  +receive(long timeout) : Message
+  +getMessageListener() : MessageListener
+}
+
+interface javax.jms.Session {
+  +createProducer(Destination destination) : MessageProducer
+  +createConsumer(Destination destination) : MessageConsumer
+  +sendTextMessage(String text) : void
+}
+
+interface javax.jms.Connection {
+  +createSession() : Session
+  +start() : void
+  +sendTextMessage(String text) : void
+}
+
+interface javax.jms.Queue {
+  +getQueueName() : String
+}
+
+interface javax.jms.Topic {
+  +getTopicName() : String
+}
+
+interface javax.jms.QueueConnectionFactory {
+  +createQueueConnection() : QueueConnection
+}
+
+interface javax.jms.QueueBrowser {
+  +getEnumeration() : Enumeration
+}
+
+interface javax.jms.MessageListener {
+  +onMessage(Message message) : void
+}
+
+interface javax.jms.MessageDrivenContext {
+  +getCallerPrincipal() : Principal
+  +getRollbackOnly() : boolean
+  +setRollbackOnly() : void
+  +newInstance() : Object
+  +postConstruct() : void
+  +preDestroy() : void
+}
+
+interface javax.jms.QueueSender {
+  +send(Message message) : void
+}
+
+javax.jms.MessageProducer ..> javax.jms.Session
+javax.jms.MessageConsumer ..> javax.jms.Session
+javax.jms.Session ..> javax.jms.Connection
+javax.jms.Queue ..> javax.jms.Destination
+javax.jms.Topic ..> javax.jms.Destination
+javax.jms.QueueConnectionFactory ..> javax.jms.Connection
+javax.jms.QueueBrowser ..> javax.jms.Queue
+javax.jms.MessageListener ..> javax.jms.MessageConsumer
+javax.jms.MessageDrivenContext ..> javax.jms.Message
+javax.jms.QueueSender ..> javax.jms.Queue
+@enduml

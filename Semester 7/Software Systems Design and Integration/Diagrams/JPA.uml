@@ -1,0 +1,60 @@
+@startuml
+title JPA Main Classes, Interfaces and Annotations
+
+class Entity {
+  -id : Long
+  -name : String
+  -tempData : String
+}
+
+interface EntityManager {
+  +persist(Object entity) : void
+  +find(Class<T> entityClass, Object primaryKey) : T
+  +remove(Object entity) : void
+  +createNativeQuery(String sqlString) : Query
+  +flush() : void
+  +refresh() : void
+}
+
+annotation Entity
+annotation Table
+annotation Id
+annotation GeneratedValue
+annotation Column
+annotation OneToMany
+annotation ManyToOne
+annotation Transient
+
+Entity -up-|> Object : Extends
+Entity ..> Id : Uses
+Entity ..> GeneratedValue : Uses
+Entity ..> Column : Uses
+Entity ..> OneToMany : Uses
+Entity ..> ManyToOne : Uses
+Entity ..> Transient : Uses
+Entity ..> Table : Uses
+EntityManager ..> Entity : Manages
+
+note "An entity represents a table in a relational database." as N1
+note "The EntityManager API is used to create, read, update and delete operations for entities." as N2
+note "@Id is used to specify the primary key of an entity." as N3
+note "@GeneratedValue is used to specify the primary key generation strategy." as N4
+note "@Column is used to specify the mapped column for a persistent property or field." as N5
+note "@OneToMany is used to specify a one-to-many relationship between entities." as N6
+note "@ManyToOne is used to specify a many-to-one relationship between entities." as N7
+note "@Transient is used to specify that a field is not to be persisted in the database." as N8
+note "@Table is used to specify the primary table for an entity." as N9
+
+
+Entity .. N1
+EntityManager .. N2
+Id .. N3
+GeneratedValue .. N4
+Column .. N5
+OneToMany .. N6
+ManyToOne .. N7
+Transient .. N8
+Table .. N9
+
+
+@enduml

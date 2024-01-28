@@ -1,0 +1,62 @@
+@startuml
+
+interface Remote {
+  +invoke(obj: RemoteObject, method: Method, params: Object[]): Object
+}
+
+interface Serializable {
+  +toString(): String
+}
+
+class RemoteObject {
+  +RemoteObject()
+  +getRef(): RemoteRef
+  +writeObject(out: ObjectOutput): void
+  +readObject(in: ObjectInput): void
+}
+
+class RemoteServer {
+  +RemoteServer()
+  +getClientHost(): String
+}
+
+class UnicastRemoteObject {
+  +UnicastRemoteObject()
+  +UnicastRemoteObject(port: int)
+  +UnicastRemoteObject(port: int, csf: RMIClientSocketFactory, ssf: RMIServerSocketFactory): void
+  +{static} clone(): Object
+  +{static} exportObject(obj: Remote, port: int): void
+  +{static} unexportObject(obj: Remote, force: boolean): void
+}
+
+interface Registry {
+  +bind(name: String, obj: Remote): void
+  +rebind(name: String, obj: Remote): void
+  +lookup(name: String): Remote
+  +unbind(name: String): void
+  +list(): String[]
+}
+
+class LocateRegistry {
+  +createRegistry(port: int): Registry
+  +{static} getRegistry(): Registry
+  +{static} getRegistry(host: String, port: int): Registry
+}
+
+class Naming {
+  +{static} lookup(name: String): Remote
+  +{static} bind(name: String, obj: Remote): void
+  +{static} rebind(name: String, obj: Remote): void
+  +{static} unbind(name: String): void
+}
+
+Registry --|> Remote
+
+Remote --|> Serializable
+RemoteObject --|> Serializable
+UnicastRemoteObject --|> RemoteObject
+RemoteServer --|> RemoteObject
+
+Naming --|> Remote
+
+@enduml

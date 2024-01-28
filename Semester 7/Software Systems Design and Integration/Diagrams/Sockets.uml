@@ -1,0 +1,55 @@
+@startuml
+
+class ServerSocket {
+  +ServerSocket()
+  +ServerSocket(int port)
+  +ServerSocket(int port, int backlog)
+  +ServerSocket(int port, int backlog, InetAddress bindAddr)
+  +accept(): Socket
+  +bind(SocketAddress endpoint): void
+  +close(): void
+  +getInetAddress(): InetAddress
+  +getLocalPort(): int
+}
+
+class Socket {
+  +Socket()
+  +Socket(InetAddress address, int port)
+  +Socket(String host, int port)
+  +close(): void
+  +getInputStream(): InputStream
+  +getOutputStream(): OutputStream
+  +getInetAddress(): InetAddress
+  +getPort(): int
+}
+
+class DatagramSocket {
+  +DatagramSocket()
+  +DatagramSocket(int port)
+  +DatagramSocket(SocketAddress bindaddr)
+  +close(): void
+  +receive(DatagramPacket p): void
+  +send(DatagramPacket p): void
+}
+
+class DatagramPacket {
+  +DatagramPacket(byte[] buf, int length)
+  +DatagramPacket(byte[] buf, int length, InetAddress address, int port)
+  +getData(): byte[]
+  +getLength(): int
+  +getAddress(): InetAddress
+  +getPort(): int
+}
+
+class MulticastSocket {
+  +MulticastSocket(int port)
+  +MulticastSocket(SocketAddress bindaddr)
+  +joinGroup(InetAddress mcastaddr): void
+  +leaveGroup(InetAddress mcastaddr): void
+  +setTimeToLive(int ttl): void
+}
+
+MulticastSocket --|> DatagramSocket
+
+
+@enduml

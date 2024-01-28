@@ -1,0 +1,45 @@
+@startuml
+
+class Thread {
+  +Thread()
+  +Thread(Runnable target)
+  +start(): void
+  +run(): void
+  +sleep(long millis): void
+  +wait(): void
+  +notify(): void
+  +notifyAll():void
+}
+
+interface Runnable {
+  +run(): void
+}
+
+class SwingWorker {
+  +SwingWorker()
+  +execute(): void
+  +done(): void
+  +publish(V... chunks): void
+  +process(List<V> chunks): void
+  +doInBackground(): T
+  +get(): T
+  +setProgress(int progress): void
+}
+
+class Lock {
+  +lock(): void
+  +unlock(): void
+}
+
+class LockManager {
+  +acquireLock(): void
+  +releaseLock(): void
+  +isLockAcquired(): boolean
+}
+
+MulticastSocket --|> DatagramSocket
+Thread --|> Runnable
+SwingWorker --|> Runnable
+
+
+@enduml

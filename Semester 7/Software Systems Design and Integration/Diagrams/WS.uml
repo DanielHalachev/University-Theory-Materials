@@ -1,0 +1,60 @@
+@startuml
+
+' JAX-RS
+interface javax.ws.rs.core.Response {
+  +getEntity(): Object
+  +getStatus(): int
+  +getStatusInfo(): StatusType
+  +getHeaders(): MultivaluedMap<String, Object>
+}
+interface javax.ws.rs.core.UriInfo {
+  +getPath(): String
+  +getQueryParameters(): MultivaluedMap<String, String>
+  +getAbsolutePath(): URI
+  +getBaseUri(): URI
+}
+annotation javax.ws.rs.GET
+annotation javax.ws.rs.POST
+annotation javax.ws.rs.Path
+annotation javax.ws.rs.Produces
+annotation javax.ws.rs.Consumes
+annotation javax.ws.rs.PathParam
+annotation javax.ws.rs.QueryParam
+
+javax.ws.rs.core.Response --|> javax.ws.rs.core.UriInfo : uses
+javax.ws.rs.GET --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.POST --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.Path --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.Produces --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.Consumes --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.PathParam --|> javax.ws.rs.core.Response : annotates
+javax.ws.rs.QueryParam --|> javax.ws.rs.core.Response : annotates
+
+' JAX-WS
+interface javax.xml.ws.Service {
+  +addPort(QName, String, String): void
+  +createDispatch(QName, Class<T>, Service.Mode): Dispatch<T>
+  +getPort(QName, Class<T>): T
+  +getPorts(): Iterator<QName>
+}
+interface javax.xml.ws.WebServiceContext {
+  +getMessageContext(): MessageContext
+  +getUserPrincipal(): Principal
+  +isUserInRole(String): boolean
+}
+annotation javax.jws.WebService
+annotation javax.jws.WebMethod
+annotation javax.jws.soap.SOAPBinding
+annotation javax.jws.HandlerChain
+annotation javax.jws.WebParam
+annotation javax.jws.WebResult
+
+javax.xml.ws.Service --|> javax.xml.ws.WebServiceContext : uses
+javax.jws.WebService --|> javax.xml.ws.Service : annotates
+javax.jws.WebMethod --|> javax.xml.ws.Service : annotates
+javax.jws.soap.SOAPBinding --|> javax.xml.ws.Service : annotates
+javax.jws.HandlerChain --|> javax.xml.ws.Service : annotates
+javax.jws.WebParam --|> javax.xml.ws.Service : annotates
+javax.jws.WebResult --|> javax.xml.ws.Service : annotates
+
+@enduml

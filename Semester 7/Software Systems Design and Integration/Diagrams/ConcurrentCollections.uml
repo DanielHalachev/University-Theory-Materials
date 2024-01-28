@@ -1,0 +1,140 @@
+@startuml
+
+interface List {
+  +add(E element): boolean
+  +remove(E element): boolean
+  +get(int index): E
+  +size(): int
+}
+
+interface Queue {
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+interface Map {
+  +put(K key, V value): V
+  +get(K key): V
+  +remove(K key): V
+  +size(): int
+}
+
+class AtomicInteger {
+  +AtomicInteger()
+  +AtomicInteger(int initialValue)
+  +get(): int
+  +set(int newValue): void
+  +getAndIncrement(): int
+  +getAndDecrement(): int
+  +incrementAndGet(): int
+  +decrementAndGet(): int
+}
+
+class ConcurrentHashMap {
+  +ConcurrentHashMap()
+  +put(K key, V value): V
+  +get(K key): V
+  +remove(K key): V
+  +size(): int
+}
+
+class CopyOnWriteArrayList {
+  +CopyOnWriteArrayList()
+  +add(E element): boolean
+  +remove(E element): boolean
+  +get(int index): E
+  +size(): int
+}
+
+class CopyOnWriteArraySet {
+  +CopyOnWriteArraySet()
+  +add(E element): boolean
+  +remove(E element): boolean
+  +size(): int
+}
+
+class LinkedBlockingQueue {
+  +LinkedBlockingQueue()
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class ArrayBlockingQueue {
+  +ArrayBlockingQueue(int capacity)
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class ConcurrentLinkedQueue {
+  +ConcurrentLinkedQueue()
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class ConcurrentSkipListMap {
+  +ConcurrentSkipListMap()
+  +put(K key, V value): V
+  +get(K key): V
+  +remove(K key): V
+  +size(): int
+}
+
+class ConcurrentSkipListSet {
+  +ConcurrentSkipListSet()
+  +add(E element): boolean
+  +remove(E element): boolean
+  +size(): int
+}
+
+class DelayQueue {
+  +DelayQueue()
+  +add(Delayed element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class LinkedBlockingDeque {
+  +LinkedBlockingDeque()
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class PriorityBlockingQueue {
+  +PriorityBlockingQueue()
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class SynchronousQueue {
+  +SynchronousQueue()
+  +add(E element): boolean
+  +poll(): E
+  +size(): int
+}
+
+class Semaphore {
+  +Semaphore(int permits)
+  +acquire(): void
+  +release(): void
+}
+
+List <|.. CopyOnWriteArrayList
+Queue <|.. LinkedBlockingQueue
+Queue <|.. LinkedBlockingDeque
+Queue <|.. ArrayBlockingQueue
+Queue <|.. ConcurrentLinkedQueue
+Queue <|.. PriorityBlockingQueue
+Queue <|.. SynchronousQueue
+Queue <|.. DelayQueue
+Map <|.. ConcurrentHashMap
+Set <|.. CopyOnWriteArraySet
+Map <|.. ConcurrentSkipListMap
+Set <|.. ConcurrentSkipListSet
+
+@enduml
