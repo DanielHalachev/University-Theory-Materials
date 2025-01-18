@@ -1,2 +1,2 @@
 # SU-Non-Code-Materials
-All non-code materials
+Useful theory studied during my Bachelor's Degree in Software Engineering at FMI, Sofia University "St. Kliment Ohridsky".
